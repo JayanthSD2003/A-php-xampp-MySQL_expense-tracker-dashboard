@@ -11,6 +11,7 @@ A simple yet complete web application to track daily income and expenses, set mo
 ![XAMPP](https://img.shields.io/badge/XAMPP-FB7A24?style=for-the-badge&logo=xampp&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 
+
 📌 Built as part of my MCA learning journey and Web Development Internship at Edutainer.
 
 ---
@@ -74,6 +75,9 @@ A simple yet complete web application to track daily income and expenses, set mo
 
 ![Charts and History](https://github.com/JayanthSD2003/A-php-xampp-MySQL_expense-tracker-dashboard/raw/446506184b50abb83c8df2f6aaf7a6188516b04d/ScreenShots/Screenshot%20(14).png)
 
+### Saved Report on Export
+
+![Report on excel](https://github.com/JayanthSD2003/A-php-xampp-MySQL_expense-tracker-dashboard/blob/6c116972cfcf2b5b81364dc181d77c541e1aed82/ScreenShots/Screenshot%20(15).png)
 
 ## 📁 Project Structure
 
