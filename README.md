@@ -56,6 +56,25 @@ A simple yet complete web application to track daily income and expenses, set mo
 
 ---
 
+## Screenshots
+
+### Dashboard
+
+![Dashboard](https://github.com/JayanthSD2003/A-php-xampp-MySQL_expense-tracker-dashboard/raw/446506184b50abb83c8df2f6aaf7a6188516b04d/ScreenShots/Screenshot%20(11).png)
+
+### Add Transaction
+
+![Add Transaction](https://github.com/JayanthSD2003/A-php-xampp-MySQL_expense-tracker-dashboard/raw/446506184b50abb83c8df2f6aaf7a6188516b04d/ScreenShots/Screenshot%20(12).png)
+
+### Monthly Limit & Stats
+
+![Monthly Limit](https://github.com/JayanthSD2003/A-php-xampp-MySQL_expense-tracker-dashboard/raw/446506184b50abb83c8df2f6aaf7a6188516b04d/ScreenShots/Screenshot%20(13).png)
+
+### Charts & History
+
+![Charts and History](https://github.com/JayanthSD2003/A-php-xampp-MySQL_expense-tracker-dashboard/raw/446506184b50abb83c8df2f6aaf7a6188516b04d/ScreenShots/Screenshot%20(14).png)
+
+
 ## 📁 Project Structure
 
 project-root/
