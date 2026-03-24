@@ -227,7 +227,9 @@ Implemented using Chart.js:
 
 ---
 
-## 📄 License
+## License
 
-This project is built for learning and portfolio purposes.  
-Feel free to use and modify it for educational use.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/JayanthSD2003/A-php-xampp-MySQL_expense-tracker-dashboard/blob/2e50794c2af30fc6ba02bef1c160d585dad11fdd/LICENSE)
+
+This project is licensed under the [MIT License](https://github.com/JayanthSD2003/A-php-xampp-MySQL_expense-tracker-dashboard/blob/main/LICENSE) - see the LICENSE file for details.
+
