@@ -82,18 +82,18 @@ A simple yet complete web application to track daily income and expenses, set mo
 ## 📁 Project Structure
 
 project-root/
-├── index.php            # Dashboard (requires login)
-├── login.php            # Login page
-├── register.php         # Registration page
-├── logout.php           # Logout logic
-├── add_transaction.php  # Add new transaction
-├── save_limit.php       # Manage monthly limit
-├── export_excel.php     # Export data
-├── db.php               # Database connection
-├── auth.php             # Authentication helpers
-├── main.js              # Frontend logic & charts
-├── style.css            # Styling
-└── README.md
+          ├── index.php            # Dashboard (requires login)
+          ├── login.php            # Login page
+          ├── register.php         # Registration page
+          ├── logout.php           # Logout logic
+          ├── add_transaction.php  # Add new transaction
+          ├── save_limit.php       # Manage monthly limit
+          ├── export_excel.php     # Export data
+          ├── db.php               # Database connection
+          ├── auth.php             # Authentication helpers
+          ├── main.js              # Frontend logic & charts
+          ├── style.css            # Styling
+          └── README.md
 
 ---
 
