@@ -8,6 +8,8 @@ if (!isset($_GET['export'])) {
     exit;
 }
 
+$userId = $_SESSION['user_id'];
+
 header("Content-Type: application/vnd.ms-excel");
 header("Content-Disposition: attachment; filename=transactions.xls");
 header("Pragma: no-cache");
@@ -16,8 +18,10 @@ header("Expires: 0");
 $stmt = $conn->prepare("
     SELECT tran_date, type, category, description, amount
     FROM transactions
+    WHERE user_id = ?
     ORDER BY tran_date DESC, id DESC
 ");
+$stmt->bind_param("i", $userId);
 $stmt->execute();
 $result = $stmt->get_result();
 
