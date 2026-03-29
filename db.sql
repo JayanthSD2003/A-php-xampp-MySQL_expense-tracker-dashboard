@@ -1,3 +1,8 @@
+-- MySQL database schema for a personal finance tracker application.
+-- This schema includes tables for transactions, users, and settings.
+-- This has to be run in a MySQL database environment to create the necessary tables for the application on MySQL_xampp phpmyadmin.
+
+
 CREATE TABLE transactions (
   id INT(11) NOT NULL AUTO_INCREMENT,
   tran_date DATE NOT NULL,
