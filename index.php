@@ -3,40 +3,59 @@ require 'db.php';
 require 'auth.php';
 require_login();
 
+$userId       = $_SESSION['user_id'];
 $userName     = current_user_name();
 $currentMonth = date('Y-m');
 
-// Expense limit (global)
-$stmt = $conn->prepare('SELECT expense_limit FROM settings WHERE month_year = ?');
-$stmt->bind_param('s', $currentMonth);
+$currentMonthStart = date('Y-m-01');
+$currentMonthEnd   = date('Y-m-t');
+
+// Expense limit for current user only
+$stmt = $conn->prepare('SELECT expense_limit FROM settings WHERE user_id = ? AND month_year = ?');
+$stmt->bind_param('is', $userId, $currentMonth);
 $stmt->execute();
 $res = $stmt->get_result();
 $row = $res->fetch_assoc();
 $expenseLimit = $row['expense_limit'] ?? 0;
 
-// All transactions
-$tStmt = $conn->prepare('SELECT * FROM transactions ORDER BY tran_date DESC, id DESC');
+// All transactions for current user only
+$tStmt = $conn->prepare('SELECT * FROM transactions WHERE user_id = ? ORDER BY tran_date DESC, id DESC');
+$tStmt->bind_param('i', $userId);
 $tStmt->execute();
 $transactions = $tStmt->get_result();
 
-// Totals (lowercase)
-$incomeStmt = $conn->prepare("SELECT SUM(amount) AS total_income FROM transactions WHERE type='income'");
+// Total income for current user
+$incomeStmt = $conn->prepare("SELECT SUM(amount) AS total_income FROM transactions WHERE user_id = ? AND type = 'income'");
+$incomeStmt->bind_param('i', $userId);
 $incomeStmt->execute();
 $incomeRow = $incomeStmt->get_result()->fetch_assoc();
 $totalIncome = $incomeRow['total_income'] ?? 0;
 
-$expenseStmt = $conn->prepare("SELECT SUM(amount) AS total_expense FROM transactions WHERE type='expense'");
+// Total expense for current user
+$expenseStmt = $conn->prepare("SELECT SUM(amount) AS total_expense FROM transactions WHERE user_id = ? AND type = 'expense'");
+$expenseStmt->bind_param('i', $userId);
 $expenseStmt->execute();
 $expenseRow = $expenseStmt->get_result()->fetch_assoc();
 $totalExpense = $expenseRow['total_expense'] ?? 0;
 
 $balance = $totalIncome - $totalExpense;
 
+// Current month expense for current user
+$currentMonthExpenseStmt = $conn->prepare("
+    SELECT SUM(amount) AS current_month_expense
+    FROM transactions
+    WHERE user_id = ? AND type = 'expense' AND tran_date BETWEEN ? AND ?
+");
+$currentMonthExpenseStmt->bind_param('iss', $userId, $currentMonthStart, $currentMonthEnd);
+$currentMonthExpenseStmt->execute();
+$currentMonthExpenseRow = $currentMonthExpenseStmt->get_result()->fetch_assoc();
+$currentMonthExpense = $currentMonthExpenseRow['current_month_expense'] ?? 0;
+
 // Limit status
 $remainingLimit = 0;
 $limitMessage   = '';
 if ($expenseLimit > 0) {
-    $remainingLimit = $expenseLimit - $totalExpense;
+    $remainingLimit = $expenseLimit - $currentMonthExpense;
     if ($remainingLimit < 0) {
         $limitMessage = 'Limit exceeded by ₹' . number_format(abs($remainingLimit), 2);
     } else {
@@ -44,13 +63,14 @@ if ($expenseLimit > 0) {
     }
 }
 
-// Chart: expenses by category
+// Chart: expenses by category for current user only
 $catStmt = $conn->prepare("
     SELECT category, SUM(amount) AS total
     FROM transactions
-    WHERE type = 'expense'
+    WHERE user_id = ? AND type = 'expense'
     GROUP BY category
 ");
+$catStmt->bind_param('i', $userId);
 $catStmt->execute();
 $catRes     = $catStmt->get_result();
 $categories = [];
@@ -60,21 +80,23 @@ while ($r = $catRes->fetch_assoc()) {
     $catTotals[]  = (float)$r['total'];
 }
 
-// Chart: income vs expense per month (lowercase)
+// Chart: income vs expense per month for current user only
 $trendStmt = $conn->prepare("
-  SELECT DATE_FORMAT(tran_date, '%Y-%m') AS ym,
-         SUM(CASE WHEN type='income' THEN amount ELSE 0 END) AS income,
-         SUM(CASE WHEN type='expense' THEN amount ELSE 0 END) AS expense
-  FROM transactions
-  GROUP BY ym
-  ORDER BY ym DESC
-  LIMIT 6
+    SELECT DATE_FORMAT(tran_date, '%Y-%m') AS ym,
+           SUM(CASE WHEN type='income' THEN amount ELSE 0 END) AS income,
+           SUM(CASE WHEN type='expense' THEN amount ELSE 0 END) AS expense
+    FROM transactions
+    WHERE user_id = ?
+    GROUP BY ym
+    ORDER BY ym DESC
+    LIMIT 6
 ");
+$trendStmt->bind_param('i', $userId);
 $trendStmt->execute();
-$trendRes      = $trendStmt->get_result();
-$trendLabels   = [];
-$trendIncome   = [];
-$trendExpense  = [];
+$trendRes     = $trendStmt->get_result();
+$trendLabels  = [];
+$trendIncome  = [];
+$trendExpense = [];
 while ($tr = $trendRes->fetch_assoc()) {
     $trendLabels[]  = $tr['ym'];
     $trendIncome[]  = (float)$tr['income'];
